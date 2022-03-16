@@ -13,3 +13,4 @@ target_sources(embedded_cli_tests PRIVATE
         )
 
 target_link_libraries(embedded_cli_tests PRIVATE EmbeddedCLI::EmbeddedCLI)
+target_compile_options(embedded_cli_tests PRIVATE -Wall -Wextra -Wpedantic -Werror -Wcast-align)

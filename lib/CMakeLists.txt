@@ -11,7 +11,7 @@ target_include_directories(embedded_cli_lib
 if(MSVC)
   target_compile_options(embedded_cli_lib PRIVATE /W4 /WX)
 else()
-  target_compile_options(embedded_cli_lib PRIVATE -Wall -Wextra -Wpedantic -Werror)
+  target_compile_options(embedded_cli_lib PRIVATE -Wall -Wextra -Wpedantic -Werror -Wcast-align)
 endif()
 
 add_library(EmbeddedCLI::EmbeddedCLI ALIAS embedded_cli_lib)
