@@ -13,6 +13,12 @@
 #define UNSET_FLAG(flags, flag) ((flags) &= ~(flag))
 
 /**
+ * Mark any intentionally unused parameters to suppress
+ * unused warnings
+ */
+#define UNUSED(x) (void)(x)
+
+/**
  * Marks binding as candidate for autocompletion
  * This flag is updated each time getAutocompletedCommand is called
  */
@@ -800,8 +806,6 @@ static void parseCommand(EmbeddedCli *cli) {
 }
 
 static void initInternalBindings(EmbeddedCli *cli) {
-    PREPARE_IMPL(cli)
-
     CliCommandBinding b = {
             "help",
             "Print list of commands",
@@ -814,7 +818,7 @@ static void initInternalBindings(EmbeddedCli *cli) {
 
 static void onHelp(EmbeddedCli *cli, char *tokens, void *context) {
     PREPARE_IMPL(cli)
-
+    UNUSED(context);
     if (impl->bindingsCount == 0) {
         writeToOutput(cli, "Help is not available");
         writeToOutput(cli, lineBreak);
@@ -893,7 +897,7 @@ static AutocompletedCommand getAutocompletedCommand(EmbeddedCli *cli, const char
 
         // check if this command is candidate for autocomplete
         bool isCandidate = true;
-        for (int j = 0; j < prefixLen; ++j) {
+        for (unsigned int j = 0; j < prefixLen; ++j) {
             if (prefix[j] != name[j]) {
                 isCandidate = false;
                 break;
@@ -914,7 +918,7 @@ static AutocompletedCommand getAutocompletedCommand(EmbeddedCli *cli, const char
             continue;
         }
 
-        for (int j = impl->cmdSize; j < cmd.autocompletedLen; ++j) {
+        for (unsigned int j = impl->cmdSize; j < cmd.autocompletedLen; ++j) {
             if (cmd.firstCandidate[j] != name[j]) {
                 cmd.autocompletedLen = j;
                 break;
@@ -935,7 +939,7 @@ static void printLiveAutocompletion(EmbeddedCli *cli) {
     }
 
     // print live autocompletion (or nothing, if it doesn't exist)
-    for (int i = impl->cmdSize; i < cmd.autocompletedLen; ++i) {
+    for (unsigned int i = impl->cmdSize; i < cmd.autocompletedLen; ++i) {
         cli->writeChar(cli, cmd.firstCandidate[i]);
     }
     // replace with spaces previous autocompletion
@@ -1000,7 +1004,7 @@ static void clearCurrentLine(EmbeddedCli *cli) {
     size_t len = impl->inputLineLength + strlen(impl->invitation);
 
     cli->writeChar(cli, '\r');
-    for (int i = 0; i < len; ++i) {
+    for (unsigned int i = 0; i < len; ++i) {
         cli->writeChar(cli, ' ');
     }
     cli->writeChar(cli, '\r');
@@ -1010,7 +1014,7 @@ static void clearCurrentLine(EmbeddedCli *cli) {
 static void writeToOutput(EmbeddedCli *cli, const char *str) {
     size_t len = strlen(str);
 
-    for (int i = 0; i < len; ++i) {
+    for (unsigned int i = 0; i < len; ++i) {
         cli->writeChar(cli, str[i]);
     }
 }

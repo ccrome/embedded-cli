@@ -8,4 +8,10 @@ target_include_directories(embedded_cli_lib
         PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include
         )
 
+if(MSVC)
+  target_compile_options(embedded_cli_lib PRIVATE /W4 /WX)
+else()
+  target_compile_options(embedded_cli_lib PRIVATE -Wall -Wextra -Wpedantic -Werror)
+endif()
+
 add_library(EmbeddedCLI::EmbeddedCLI ALIAS embedded_cli_lib)
